@@ -99,13 +99,38 @@ def fit(features: np.array,
         if (res < 1e-20):
             break
 
-    loss = loss_new
-    norm = norm_new
+        loss = loss_new
+        norm = norm_new
         i += 1
         num_div = 1
     
     return w
 
+
+
+def scaler(features: np.array) -> Tuple[np.array, np.array, np.array]:
+    """Scaler
+        
+    Parameters
+    ----------
+    features: np.array
+        where the columns do not contain E, T
+    
+    Returns
+    -------
+    scaled_features: np.array
+        scaled features
+    mean: np.array
+        mean vector for each feature
+    std: np.array
+        std vector for each feature
+    """
+
+    std = np.std(features, axis=0)
+    std[np.where(std == 0)[0]] = 1.
+    mean = np.mean(features, axis=0)
+    scaled_features = (features - mean)/std
+    return scaled_features, mean, std
 
 
 def gradient(features: np.array,
@@ -200,3 +225,4 @@ def log_likelihood(features: np.array,
         if E[i,0]:
             loss -= (betax[i] - np.log(risk_set))/n_samples
     return loss
+
