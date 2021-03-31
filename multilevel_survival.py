@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 
@@ -10,7 +10,7 @@ def fit(features: np.array,
         num_gen: int,
         num_im: int,
         epsilon_0: float = 0.01,
-        n_iter: int =200) -> np.array:
+        n_iter: int = 200) -> np.array:
     """Fit w in a Cox model h(t) = h_0(t) exp(w*x)
     
     Parameters
@@ -20,14 +20,15 @@ def fit(features: np.array,
     groups: Dict[int, List[int]]
         dictionary where keys are genes and values are SNPs associated to gene
     penalty1: float
-        lambda_W
+        lambda_W (must be >= 0)
     penalty2: float
-        lambda_I
-    num_gen: float
+        lambda_I (must be >= 0)
+    num_gen: int
         number of SNPs
-    num_im: float
+    num_im: int
         number of MRI features
     epsilon_0: float
+        must be > 0
     n_iter: int
         number of iterations
     
@@ -71,25 +72,16 @@ def fit(features: np.array,
         if penalty2 >= 0:
             threshold2 = epsilon*penalty2
             w_new[index:] = (w_new[index:])/(1+2*epsilon*penalty2)
-        if penalty2 < 0:
-            w_new[index:] = np.zeros(w_new[index:].shape)
         
         norm_new = penalty2*np.linalg.norm(w_new[index:])**2 + penalty1*np.sum([(np.linalg.norm(w_new[groups[g]])**2)*np.sqrt(len(groups[g])) for g in groups])
-        g = 1/epsilon*(w_new - w)
-        loss_new = log_likelihood(features, w_new)+norm_new
+        loss_new = log_likelihood(features, w_new) + norm_new
         
-        if loss_new > loss:
+        if ((loss_new > loss) | (loss_new == float('nan'))):
             epsilon = epsilon/2
             i += 1
             num_div += 1
             continue
         
-        if loss_new == float('nan'):
-            epsilon = epsilon/2
-            i += 1
-            num_div += 1
-            continue
-    
         w_prev = w
         w = w_new
         epsilon = epsilon_0
@@ -114,7 +106,7 @@ def scaler(features: np.array) -> Tuple[np.array, np.array, np.array]:
     Parameters
     ----------
     features: np.array
-        where the columns do not contain E, T
+        features must not contain E, T
     
     Returns
     -------
