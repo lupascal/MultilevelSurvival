@@ -4,10 +4,10 @@ This code is a complement to the corresponding article. It has been tested which
 
 ## Structure of the code
 
-The code is mainly composed of the fit function:
+The code is mainly composed of the fit method:
 * `fit`: Fit w in a Cox model h(t) = h_0(t) exp(w*x)
 
-and three other helper function:
+and three other helper methods:
 * `scaler`: Scales features matrix (without E, T)
 * `gradient`: Compute log-likelihood gradient in a Cox model with respect to w.
 * `log_likelihood`: Compute log-likelihood in a Cox model with respect to w.
