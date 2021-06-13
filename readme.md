@@ -17,3 +17,5 @@ and three other helper methods:
 * `log_likelihood`: Compute the log-likelihood.
 
 Please refer to the comments of each function for details about their specific arguments.
+
+The file `genetic_groups.py` contains the list of SNPs used for our experiments, the mapping of SNPs to Gene (one SNP can belong to several genes) and the list of genetic groups where keys are genes and values are positions of SNPs (snp_indices).

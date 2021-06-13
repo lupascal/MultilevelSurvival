@@ -19,6 +19,7 @@ def fit(features: np.array,
         must be of size num_gen*num_im + 2, where the two last columns are delta_i (indicates if event occurs or not), T_i (time to event)
     groups: Dict[int, List[int]]
         dictionary where keys are genes and values are SNPs associated to the genes
+        Example of dictionnary is the dictionnary genetic_groups of the file genetic_groups.py
     penalty1: float
         lambda_W (must be >= 0), i.e. the weight of the group lasso penalty
     penalty2: float
